@@ -1,141 +1,157 @@
-#ifndef TG_LIB
-#define TG_LIB "TG_LIB;Town Game by cosf;header-version;v0.6.2"
+## Town Game -- Intro
+
+This is a text game(unfinished) by cosf. Players can explore the world in this game.
+
+You can see this text in the `Introduction` page.
+
+## Source Code
+
+The code is too long, so it is separated into several files and parts:
+
+- `main.cpp`, which is given below.
+- `tg.h`
+
+  - ```cpp
+    #ifndef TG_LIB
+    #define TG_LIB "TG_LIB;Town Game by cosf;header-version;v0.6.2"
+    ```
+
+  - [Utilities](/blog/35/64731bf78710066d92d29796 "tg")
+  - [Map Declaration](/blog/35/64731bf78710066d92d29796 "tg")
+  - Game Board, which is given below.
+
+  - ```cpp
+    #endif
+    ```
+
+- `centratown.cpp`
+
+  - [Game Map Implementations](/blog/35/646cb7b28710066d92d00a77#1684846514151 "centratown.cpp")
+- Several other maps will be added soon.
+
+If you are unable to compile, you can try the command below. Remember to put these three files in the same folder!
+
+```powershell
+g++ -g main.cpp -g centratown.cpp -o tg.exe -std=c++17
+```
+
+**Or** if you are using dev-c++ or other IDE with project features, you can put all three files in a project and use the built-in project compiler to compile it.
+
+The recommended ISO standard is `C++ 17(ISO/IEC 14882:2017)`.
+
+## Update log
+
+### v0.6.2 (23.6.18)
+
+- Updated map.
+- Added bonus for new archives.
+
+### v0.6.1 (23.6.3)
+
+- Updated purchase system.
+
+### v0.6.0 (23.5.29)
+
+- Separated files of the game system.
+
+### v0.5.0 (23.5.28)
+
+- Updated the way of running the game.
+
+### v0.4.0 (23.5.24)
+
+- Added one map.
+- Fixed Page.
+
+### v0.3.0 (23.5.23)
+
+- Added store.
+  Hopefully the next upgrade will be the maps.
+  The map codes may be too long, so you can download it in other blogs maybe.
+
+### v0.2.2 (23.5.22)
+
+- Added hourly reward.
+- Added more information.
+
+### v0.2.1 (23.5.21)
+
+- Changed level formula.
+- Salvage some of the stuff as exp when crafting failed.
+
+### v0.2.0 (23.5.20)
+
+- Added level.
+- Update logs will no longer be put in game.
+  See hfoj blog (here) for update logs.
+
+### v0.1.1 (23.5.19)
+
+- Added crafting.
+
+### v0.1.0 (23.5.18)
+
+- Added inventory page.
+
+### v0.0.4 (23.5.17)
+
+- Updated inventory system.
+
+### v0.0.3 (23.5.16)
+
+- Added file(progress) system.
+  Now players can save there progress through the main page.
+  Yet this feature isn't tested on big data.
+
+### v0.0.2 (23.5.15)
+
+- Updated update log.
+
+### v0.0.1 (23.5.15)
+
+- Added update log.
+
+### v0.0.0 (23.5.15)
+
+- Added main page.
+- Added quit.
+- First update.
+
+## Code Implementations
+
+The `main.cpp` code is
+
+```cpp
+// Game by cosf
+// v0.6.2
+// build 2023.6.18
+// unf
+// for more details please go to http://ac.hfoj.net/blog/35/6464e26c426c19a595da2748#1684333164277
 
 // Utilities
 
-#include <iostream>
-#include <iomanip>
-#include <fstream>
-#include <sstream>
-#include <cstring>
-#include <random>
-#include <vector>
-#include <ctime>
-#include <cmath>
-#include <set>
-#include <map>
+#include "tg.h"
 
-#if !(defined(__WINDOWS_) || defined(_WIN32))
-#include <sys/select.h>
-#include <unistd.h>
-#else
-#include <windows.h>
-#endif
+// Game Board
 
-using namespace std;
+GameBoard gb;
 
-using ull = unsigned long long;
-#define MADE_MAP 1
-
-struct SGET_RET
+// Game Start
+int main()
 {
-    string curarg;
-    string curtsk;
-};
-
-#define elif else if
-#define pii pair<int, ull>
-#define sstream stringstream
-#define next(i) i = sget(i.curarg)
-
-#if !(defined(__WINDOWS_) || defined(_WIN32))
-static void Sleep(unsigned int ms)
-{
-    timeval tval;
-    tval.tv_sec = ms / 1000;
-    tval.tv_usec = ms % 1000 * 1000;
-    select(0, NULL, NULL, NULL, &tval);
-}
-#endif
-
-static void System_Clear()
-{
-    system(
-#if !(defined(__WINDOWS_) || defined(_WIN32))
-        "clear"
-#else
-        "cls"
-#endif
-    );
-}
-
-static string operator*(string a, int b)
-{
-    string res;
-    while (b)
+    if (gb.game_start())
     {
-        if (b & 1)
-        {
-            res += a;
-        }
-        b >>= 1;
-        a += a;
+        cout << "Game did not exit normally." << endl;
+        return -1;
     }
-    return res;
+    return 0;
 }
 
-static SGET_RET sget(string tsk)
-{
-    return SGET_RET{tsk.substr(tsk.find(';') + 1), tsk.substr(0, tsk.find(';'))};
-}
+```
 
-static string itos(ull i)
-{
-    sstream sst;
-    if (i < 10000)
-    {
-        sst.clear();
-        sst << i;
-        string res;
-        sst >> res;
-        return res;
-    }
-    else
-    {
-        ull rmd, ts = 0;
-        while (i >= 1000)
-        {
-            ts++;
-            rmd = i % 1000;
-            i /= 1000;
-        }
-        string res, tmp;
-        sst.clear();
-        sst << i;
-        sst >> res;
-        if (res.length() > 1)
-        {
-            return res + " kmbtq"[ts];
-        }
-        else
-        {
-            sst.clear();
-            sst << rmd / 100;
-            sst >> tmp;
-            return res + "." + tmp + " kmbtq"[ts];
-        }
-    }
-}
+The Game Board code is (note that it is in `tg.h`):
 
-// Map Declarations
-class ExploreMap
-{
-public:
-    SGET_RET operator()(string);
-    string save();
-    SGET_RET load(SGET_RET);
-};
-
-class Town_1 : public ExploreMap
-{
-public:
-    ull carpenter_lv_1 = 0;
-    ull mason_lv_1 = 0;
-    SGET_RET operator()(string);
-    string save();
-    SGET_RET load(SGET_RET);
-};
-
+```cpp
 // Game Board
 
 class GameBoard
@@ -236,7 +252,7 @@ public:
 
     ull lstr = 0;
 
-    pii purchase(string sn, string in, int sc, int c)
+    pii purchase_light(string sn, string in, int sc, int c)
     {
         vector<int> able;
         vector<ull> nd(10, 0);
@@ -245,7 +261,7 @@ public:
         {
             c0 *= cvsld[i];
         }
-        for (int i = 0; i < sc; i++)
+        for (int i = 0; i <= sc; i++)
         {
             if (check_purchase(in, i, c0))
             {
@@ -254,7 +270,7 @@ public:
             }
             c0 /= cvsld[i + 1];
         }
-        for (int i = sc; i < 10; i++)
+        for (int i = sc + 1; i < 10; i++)
         {
             if (check_purchase(in, i, c))
             {
@@ -548,7 +564,7 @@ public:
             elif (input == "D")
             {
                 ull now = time(0);
-                if (now - lstr >= 3600)
+                if (now - lstr >= 3600000)
                 {
                     lstr = now;
                     if (level < 6)
@@ -649,7 +665,7 @@ public:
         cout << endl;
         cout << "> lv.0 wood * 10 (5 * lv.0 coins) (1)" << endl;
         cout << "> lv.0 rock * 10 (6 * lv.0 coins) (2)" << endl;
-        cout << "> lv.1 wood * 5 (10 * lv.0 coins) (3)" << endl;
+        cout << "> lv.1 wood * 5 (15 * lv.0 coins) (3)" << endl;
         cout << endl;
         cout << "> Exit(Q)" << endl;
         string input;
@@ -661,21 +677,21 @@ public:
             }
             elif (input == "1")
             {
-                if (purchase("lv.0 wood * 10", "coin", 0, 5).first != -1)
+                if (purchase_light("lv.0 wood * 10", "coin", 0, 5).first != -1)
                 {
                     invent_add("wood", 0, 10);
                 }
             }
             elif (input == "2")
             {
-                if (purchase("lv.0 rock * 10", "coin", 0, 6).first != -1)
+                if (purchase_light("lv.0 rock * 10", "coin", 0, 6).first != -1)
                 {
                     invent_add("rock", 0, 10);
                 }
             }
             elif (input == "3")
             {
-                if (purchase("lv.1 wood * 5", "coin", 0, 10).first != -1)
+                if (purchase_light("lv.1 wood * 5", "coin", 0, 10).first != -1)
                 {
                     invent_add("wood", 1, 5);
                 }
@@ -685,7 +701,7 @@ public:
             cout << endl;
             cout << "> lv.0 wood * 10 (5 * lv.0 coins) (1)" << endl;
             cout << "> lv.0 rock * 10 (6 * lv.0 coins) (2)" << endl;
-            cout << "> lv.1 wood * 5 (10 * lv.0 coins) (3)" << endl;
+            cout << "> lv.1 wood * 5 (15 * lv.0 coins) (3)" << endl;
             cout << endl;
             cout << "> Exit(Q)" << endl;
         }
@@ -750,5 +766,4 @@ public:
         return -1;
     }
 };
-
-#endif
+```
