@@ -1,5 +1,5 @@
 #ifndef TG_LIB
-#define TG_LIB "TG_LIB;Town Game by cosf;header-version;v0.6.2"
+#define TG_LIB "TG_LIB;Town Game by cosf;header-version;v0.6.3"
 
 // Utilities
 

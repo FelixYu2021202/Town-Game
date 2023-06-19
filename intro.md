@@ -13,7 +13,7 @@ The code is too long, so it is separated into several files and parts:
 
   - ```cpp
     #ifndef TG_LIB
-    #define TG_LIB "TG_LIB;Town Game by cosf;header-version;v0.6.2"
+    #define TG_LIB "TG_LIB;Town Game by cosf;header-version;v0.6.3"
     ```
 
   - [Utilities](/blog/35/64731bf78710066d92d29796 "tg")
@@ -123,8 +123,8 @@ The `main.cpp` code is
 
 ```cpp
 // Game by cosf
-// v0.6.2
-// build 2023.6.18
+// v0.6.3
+// build 2023.6.19
 // unf
 // for more details please go to http://ac.hfoj.net/blog/35/6464e26c426c19a595da2748#1684333164277
 

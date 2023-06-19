@@ -266,15 +266,26 @@ SGET_RET Town_1::operator()(string arg)
 
 string Town_1::save()
 {
-    return to_string(carpenter_lv_1) + ";" + to_string(mason_lv_1) + ";";
+    return "mp01_cpt" + to_string(carpenter_lv_1) + ";mp01_msn" + to_string(mason_lv_1) + ";";
 }
 
 SGET_RET Town_1::load(SGET_RET tgm)
 {
     next(tgm);
-    carpenter_lv_1 = stoi(tgm.curtsk);
-    next(tgm);
-    mason_lv_1 = stoi(tgm.curtsk);
-    next(tgm);
+    while (tgm.curtsk.substr(0, 4) == "mp01")
+    {
+        if (tgm.curtsk == "mp01_cpt")
+        {
+            next(tgm);
+            carpenter_lv_1 = stoi(tgm.curtsk);
+            next(tgm);
+        }
+        else if (tgm.curtsk == "mp01_msn")
+        {
+            next(tgm);
+            mason_lv_1 = stoi(tgm.curtsk);
+            next(tgm);
+        }
+    }
     return tgm;
 }
