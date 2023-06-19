@@ -252,7 +252,7 @@ public:
 
     ull lstr = 0;
 
-    pii purchase_light(string sn, string in, int sc, int c)
+    pii purchase(string sn, string in, int sc, int c)
     {
         vector<int> able;
         vector<ull> nd(10, 0);
@@ -261,7 +261,7 @@ public:
         {
             c0 *= cvsld[i];
         }
-        for (int i = 0; i <= sc; i++)
+        for (int i = 0; i < sc; i++)
         {
             if (check_purchase(in, i, c0))
             {
@@ -270,7 +270,7 @@ public:
             }
             c0 /= cvsld[i + 1];
         }
-        for (int i = sc + 1; i < 10; i++)
+        for (int i = sc; i < 10; i++)
         {
             if (check_purchase(in, i, c))
             {
@@ -564,7 +564,7 @@ public:
             elif (input == "D")
             {
                 ull now = time(0);
-                if (now - lstr >= 3600000)
+                if (now - lstr >= 3600)
                 {
                     lstr = now;
                     if (level < 6)
@@ -665,7 +665,7 @@ public:
         cout << endl;
         cout << "> lv.0 wood * 10 (5 * lv.0 coins) (1)" << endl;
         cout << "> lv.0 rock * 10 (6 * lv.0 coins) (2)" << endl;
-        cout << "> lv.1 wood * 5 (15 * lv.0 coins) (3)" << endl;
+        cout << "> lv.1 wood * 5 (10 * lv.0 coins) (3)" << endl;
         cout << endl;
         cout << "> Exit(Q)" << endl;
         string input;
@@ -677,21 +677,21 @@ public:
             }
             elif (input == "1")
             {
-                if (purchase_light("lv.0 wood * 10", "coin", 0, 5).first != -1)
+                if (purchase("lv.0 wood * 10", "coin", 0, 5).first != -1)
                 {
                     invent_add("wood", 0, 10);
                 }
             }
             elif (input == "2")
             {
-                if (purchase_light("lv.0 rock * 10", "coin", 0, 6).first != -1)
+                if (purchase("lv.0 rock * 10", "coin", 0, 6).first != -1)
                 {
                     invent_add("rock", 0, 10);
                 }
             }
             elif (input == "3")
             {
-                if (purchase_light("lv.1 wood * 5", "coin", 0, 10).first != -1)
+                if (purchase("lv.1 wood * 5", "coin", 0, 10).first != -1)
                 {
                     invent_add("wood", 1, 5);
                 }
@@ -701,7 +701,7 @@ public:
             cout << endl;
             cout << "> lv.0 wood * 10 (5 * lv.0 coins) (1)" << endl;
             cout << "> lv.0 rock * 10 (6 * lv.0 coins) (2)" << endl;
-            cout << "> lv.1 wood * 5 (15 * lv.0 coins) (3)" << endl;
+            cout << "> lv.1 wood * 5 (10 * lv.0 coins) (3)" << endl;
             cout << endl;
             cout << "> Exit(Q)" << endl;
         }
@@ -766,4 +766,5 @@ public:
         return -1;
     }
 };
+
 ```

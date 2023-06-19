@@ -37,6 +37,7 @@ struct SGET_RET
 };
 
 #define elif else if
+#define pii pair<int, ull>
 #define sstream stringstream
 #define next(i) i = sget(i.curarg)
 
