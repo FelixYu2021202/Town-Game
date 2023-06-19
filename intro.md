@@ -43,7 +43,7 @@ The recommended ISO standard is `C++ 17(ISO/IEC 14882:2017)`.
 
 ### v0.6.3 (23.6.19)
 
-- Updated code. (An error of out-of-dated code showed up yesterday)
+- Updated code. (An error of out-of-date code showed up yesterday)
 - A little change on archive forms.
 
 ### v0.6.2 (23.6.18)
