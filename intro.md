@@ -13,7 +13,7 @@ The code is too long, so it is separated into several files and parts:
 
   - ```cpp
     #ifndef TG_LIB
-    #define TG_LIB "TG_LIB;Town Game by cosf;header-version;v0.6.3"
+    #define TG_LIB "TG_LIB;Town Game by cosf;header-version;v0.6.4"
     ```
 
   - [Utilities](/blog/35/64731bf78710066d92d29796 "utility.md")
@@ -40,6 +40,10 @@ g++ -g main.cpp -g centratown.cpp -o tg.exe -std=c++17
 The recommended ISO standard is `C++ 17(ISO/IEC 14882:2017)`.
 
 ## Update log
+
+### v0.6.4 (23.6.19)
+
+- Fixed a bug.
 
 ### v0.6.3 (23.6.19)
 
@@ -128,7 +132,7 @@ The `main.cpp` code is
 
 ```cpp
 // Game by cosf
-// v0.6.3
+// v0.6.4
 // build 2023.6.19
 // unf
 // for more details please go to http://ac.hfoj.net/blog/35/6464e26c426c19a595da2748#1684333164277
@@ -469,6 +473,8 @@ public:
             string fin;
             cin >> fin;
             ifstream file(fin);
+            invent.clear();
+            invent_names.clear();
             string dat;
             getline(file, dat);
             SGET_RET tgm = sget(dat);

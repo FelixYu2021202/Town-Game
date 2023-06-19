@@ -1,5 +1,5 @@
 #ifndef TG_LIB
-#define TG_LIB "TG_LIB;Town Game by cosf;header-version;v0.6.3"
+#define TG_LIB "TG_LIB;Town Game by cosf;header-version;v0.6.4"
 
 // Utilities
 
@@ -448,6 +448,8 @@ public:
             string fin;
             cin >> fin;
             ifstream file(fin);
+            invent.clear();
+            invent_names.clear();
             string dat;
             getline(file, dat);
             SGET_RET tgm = sget(dat);
