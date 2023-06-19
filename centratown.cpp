@@ -266,7 +266,7 @@ SGET_RET Town_1::operator()(string arg)
 
 string Town_1::save()
 {
-    return "mp01_cpt" + to_string(carpenter_lv_1) + ";mp01_msn" + to_string(mason_lv_1) + ";";
+    return "mp01_cpt;" + to_string(carpenter_lv_1) + ";mp01_msn;" + to_string(mason_lv_1) + ";";
 }
 
 SGET_RET Town_1::load(SGET_RET tgm)

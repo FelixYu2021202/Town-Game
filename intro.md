@@ -16,8 +16,8 @@ The code is too long, so it is separated into several files and parts:
     #define TG_LIB "TG_LIB;Town Game by cosf;header-version;v0.6.3"
     ```
 
-  - [Utilities](/blog/35/64731bf78710066d92d29796 "tg")
-  - [Map Declaration](/blog/35/64731bf78710066d92d29796 "tg")
+  - [Utilities](/blog/35/64731bf78710066d92d29796 "utility.md")
+  - [Map Declaration](/blog/35/64731bf78710066d92d29796 "utility.md")
   - Game Board, which is given below.
 
   - ```cpp
@@ -26,7 +26,7 @@ The code is too long, so it is separated into several files and parts:
 
 - `centratown.cpp`
 
-  - [Game Map Implementations](/blog/35/646cb7b28710066d92d00a77#1684846514151 "centratown.cpp")
+  - [Game Map Implementations](/blog/35/646cb7b28710066d92d00a77#1684846514151 "centratown.md")
 - Several other maps will be added soon.
 
 If you are unable to compile, you can try the command below. Remember to put these three files in the same folder!
@@ -40,6 +40,11 @@ g++ -g main.cpp -g centratown.cpp -o tg.exe -std=c++17
 The recommended ISO standard is `C++ 17(ISO/IEC 14882:2017)`.
 
 ## Update log
+
+### v0.6.3 (23.6.19)
+
+- Updated code. (An error of out-of-dated code showed up yesterday)
+- A little change on archive forms.
 
 ### v0.6.2 (23.6.18)
 

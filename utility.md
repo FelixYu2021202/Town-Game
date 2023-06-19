@@ -1,5 +1,7 @@
 This blog is for putting the implement of `Utilities` and `Map Declaration` of this game.
 
+[Back to `intro.md`](/blog/35/6464e26c426c19a595da2748)
+
 This is the Utilities code:
 
 ```cpp
