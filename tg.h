@@ -1,5 +1,5 @@
 #ifndef TG_LIB
-#define TG_LIB "TG_LIB;Town Game by cosf;header-version;v0.6.4"
+#define TG_LIB "TG_LIB;Town Game by cosf;header-version;v0.7.0"
 
 // Utilities
 
@@ -21,6 +21,8 @@
 #else
 #include <windows.h>
 #endif
+
+#include "color.h"
 
 using namespace std;
 
