@@ -109,6 +109,10 @@ public:
     {
         return NullWrapper<0, 0, 0>::sentry;
     }
+    Color()
+    {
+        check_gnu_color();
+    }
 } color_wrapper;
 
 #define DC(name, fore, back, light) inline function<void(basic_ostream<char> &)> name = color_wrapper.wrapper<fore, back, light>();
