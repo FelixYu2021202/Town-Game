@@ -41,16 +41,6 @@ private:
 #endif // (defined(__WINDOWS_) || defined(_WIN32))
     }
 
-    class Color_8
-    {
-    public:
-        int fore, back;
-        int light = 0;
-        Color_8(int fore, int back, int light) : fore(fore), back(back), light(light) {}
-        Color_8(int fore, int back) : fore(fore), back(back) {}
-        Color_8() : fore(37), back(40) {}
-    };
-
 public:
     typedef void __cpf(ostream &os);
 
