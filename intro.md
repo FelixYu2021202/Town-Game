@@ -26,7 +26,7 @@ The code is too long, so it is separated into several files and parts:
 
 - `color.h`
 
-  - [Color Implementations](/ "color.md")
+  - [Color Implementations](/blog/35/649c3222da214f061b5d5cc5 "color.md")
 
 - `centratown.cpp`
 
