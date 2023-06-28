@@ -8,9 +8,11 @@ This is the Color Implementations code:
 #ifndef TG_COLOR_LIB
 #define TG_COLOR_LIB
 
+// These are settings
 #define USE_COLOR 0
 #define SET_GNU_COLOR_IF_AVAILABLE 1
 #define REVERSE_COLOR 1
+#define USE_NAMESPACE 0
 
 #include <iostream>
 #include <functional>
@@ -112,45 +114,50 @@ public:
 #define DC(name, fore, back, light) inline function<void(basic_ostream<char> &)> name = color_wrapper.wrapper<fore, back, light>();
 #define DN(name) inline function<void(basic_ostream<char> &)> name = color_wrapper.null_wrapper();
 
+#if USE_NAMESPACE
+namespace color
+{
+#endif // USE_NAMESPACE
+
 #if USE_COLOR
 
 #if REVERSE_COLOR
 
-DC(black, 30, 47, 0);
-DC(red, 31, 47, 0);
-DC(green, 32, 47, 0);
-DC(yellow, 33, 47, 0);
-DC(blue, 34, 47, 0);
-DC(magenta, 35, 47, 0);
-DC(cyan, 36, 47, 0);
-DC(white, 37, 47, 0);
-DC(light_black, 30, 47, 1);
-DC(light_red, 31, 47, 1);
-DC(light_green, 32, 47, 1);
-DC(light_yellow, 33, 47, 1);
-DC(light_blue, 34, 47, 1);
-DC(light_magenta, 35, 47, 1);
-DC(light_cyan, 36, 47, 1);
-DC(light_white, 37, 47, 1);
+    DC(black, 30, 47, 0);
+    DC(red, 31, 47, 0);
+    DC(green, 32, 47, 0);
+    DC(yellow, 33, 47, 0);
+    DC(blue, 34, 47, 0);
+    DC(magenta, 35, 47, 0);
+    DC(cyan, 36, 47, 0);
+    DC(white, 37, 47, 0);
+    DC(light_black, 30, 47, 1);
+    DC(light_red, 31, 47, 1);
+    DC(light_green, 32, 47, 1);
+    DC(light_yellow, 33, 47, 1);
+    DC(light_blue, 34, 47, 1);
+    DC(light_magenta, 35, 47, 1);
+    DC(light_cyan, 36, 47, 1);
+    DC(light_white, 37, 47, 1);
 
 #else // REVERSE_COLOR
 
-DC(black, 30, 40, 0);
-DC(red, 31, 40, 0);
-DC(green, 32, 40, 0);
-DC(yellow, 33, 40, 0);
-DC(blue, 34, 40, 0);
-DC(magenta, 35, 40, 0);
-DC(cyan, 36, 40, 0);
-DC(white, 37, 40, 0);
-DC(light_black, 30, 40, 1);
-DC(light_red, 31, 40, 1);
-DC(light_green, 32, 40, 1);
-DC(light_yellow, 33, 40, 1);
-DC(light_blue, 34, 40, 1);
-DC(light_magenta, 35, 40, 1);
-DC(light_cyan, 36, 40, 1);
-DC(light_white, 37, 40, 1);
+    DC(black, 30, 40, 0);
+    DC(red, 31, 40, 0);
+    DC(green, 32, 40, 0);
+    DC(yellow, 33, 40, 0);
+    DC(blue, 34, 40, 0);
+    DC(magenta, 35, 40, 0);
+    DC(cyan, 36, 40, 0);
+    DC(white, 37, 40, 0);
+    DC(light_black, 30, 40, 1);
+    DC(light_red, 31, 40, 1);
+    DC(light_green, 32, 40, 1);
+    DC(light_yellow, 33, 40, 1);
+    DC(light_blue, 34, 40, 1);
+    DC(light_magenta, 35, 40, 1);
+    DC(light_cyan, 36, 40, 1);
+    DC(light_white, 37, 40, 1);
 
 #endif // REVERSE_COLOR
 
@@ -174,6 +181,10 @@ DN(light_cyan);
 DN(light_white);
 
 #endif // USE_COLOR
+
+#if USE_NAMESPACE
+}
+#endif // USE_NAMESPACE
 
 ostream &operator<<(ostream &os, function<void(basic_ostream<char> &)> pf)
 {
