@@ -3,3 +3,5 @@
 tg
 *.json
 *.plist
+*.test.*
+*.test
