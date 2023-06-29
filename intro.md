@@ -4,9 +4,11 @@ This is a text game(unfinished) by cosf. Players can explore the world in this g
 
 You can see this text in the `Introduction` page.
 
+You can visit [`Github`](https://github.com/FelixYu2021202/Town-Game/) for better information.
+
 ## Source Code
 
-The code is too long, so it is separated into several files and parts:
+The code is too long, so it is separated into several files and parts: (in github you can download these files instead of copying them from markdown files.)
 
 - `main.cpp`, which is given below.
 - `tg.h`

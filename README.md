@@ -2,7 +2,7 @@
 
 This is a text game(unfinished) by cosf. Players can explore the world in this game.
 
-You can see this text in the `Introduction` page.
+See more in `intro.md`. The links in these markdown files are not usable in github. Hover on a link and a markdown file name will appears.
 
 ## Update log
 
