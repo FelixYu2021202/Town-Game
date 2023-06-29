@@ -20,13 +20,10 @@ private:
     bool gnu()
     {
 #if (defined(__WINDOWS_) || defined(_WIN32))
-        string vname;
         using NTPROC = void(__stdcall *)(DWORD *, DWORD *, DWORD *);
-        using HINSTANCE hinst = LoadLibrary(_T("ntdll.dll"));
-        DWORD dwMajor, dwMinor, dwBuildNumber;
-        NTPROC proc = (NTPROC)GetProcAddress(hinst, "RtlGetNtVersionNumbers");
-        proc(&dwMajor, &dwMinor, &dwBuildNumber);
-        if (dwMajor < 10)
+        DWORD ver, mv, bv;
+        ((NTPROC)GetProcAddress(LoadLibrary(_T("ntdll.dll")), "RtlGetNtVersionNumbers"))(&ver, &mv, &bv);
+        if (ver < 10)
         {
             return false;
         }
