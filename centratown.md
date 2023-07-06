@@ -52,35 +52,35 @@ SGET_RET Town_1::operator()(string arg)
     for (int i = 1; i <= 3; i++)
     {
         System_Clear();
-        cout << "Travelling to town" << string(".") * i << endl;
+        cout << "Travelling to " << green << "town" << reset << string(".") * i << endc;
         Sleep(200);
     }
     System_Clear();
-    cout << "You arrived at town." << endl;
+    cout << "You arrived at " << green << "town." << endc;
     Sleep(1000);
     System_Clear();
-    cout << "       Town" << endl;
+    cout << green << "       Town" << endc;
     if (MADE_MAP >= 3 && gb.level >= 1)
     {
-        cout << "         To Northern Woods (U)";
+        cout << green << "         To Northern Woods (U)";
     }
-    cout << endl;
-    cout << endl;
+    cout << endc;
+    cout << endc;
     cout << "Back to Main Page (L)";
     if (MADE_MAP >= 7 && gb.level >= 2)
     {
-        cout << "     To Black Smith (R)";
+        cout << green << "     To Black Smith (R)";
     }
-    cout << endl;
-    cout << endl;
-    cout << "   > The town carpenter (C)" << endl;
-    cout << "   > The town mason (M)" << endl;
-    cout << endl;
+    cout << endc;
+    cout << endc;
+    cout << yellow << "   > The town carpenter (C)" << endc;
+    cout << "   > The town mason (M)" << endc;
+    cout << endc;
     if (MADE_MAP >= 2 && gb.level >= 1)
     {
-        cout << "         To Plains (D)";
+        cout << green << "         To Plains (D)";
     }
-    cout << endl;
+    cout << endc;
     string input;
     while (getline(cin, input))
     {
@@ -106,17 +106,17 @@ SGET_RET Town_1::operator()(string arg)
             if (now - carpenter_lv_1 < 30)
             {
                 System_Clear();
-                cout << "The carpenter isn't rested! He needs to rest for 0.5 min." << endl;
+                cout << yellow << "The carpenter isn't rested! He needs to rest for " << red << "0.5 min" << yellow << "." << endc;
                 Sleep(1000);
             }
             else
             {
                 System_Clear();
-                cout << "   Carpenter" << endl;
-                cout << " - 10 * lv.0 wood -> 1 * lv.1 plank + 25 exp (1)" << endl;
-                cout << " - 10 * lv.0 wood + 2 * lv.0 coin -> 5 * lv.1 wood + 25 exp (2)" << endl;
-                cout << " - 1 * lv.1 plank -> 5 * lv.0 stick + 25 exp (3)" << endl;
-                cout << " - 3 * lv.0 stick + 2 * lv.0 wood -> 1 * lv.1 ladder + 50 exp(4)" << endl;
+                cout << yellow << "   Carpenter" << endc;
+                cout << green << " - 10 * lv.0 wood -> 1 * lv.1 plank + 25 exp (1)" << endc;
+                cout << green << " - 10 * lv.0 wood + 2 * lv.0 coin -> 5 * lv.1 wood + 25 exp (2)" << endc;
+                cout << yellow << " - 1 * lv.1 plank -> 5 * lv.0 stick + 25 exp (3)" << endc;
+                cout << yellow << " - 3 * lv.0 stick + 2 * lv.0 wood -> 1 * lv.1 ladder + 50 exp(4)" << endc;
                 if (getline(cin, input))
                 {
                     if (input == "1")
@@ -126,7 +126,7 @@ SGET_RET Town_1::operator()(string arg)
                         {
                             gb.invent_add("plank", 1, 1);
                             gb.get_exp(25);
-                            cout << "Crafted." << endl;
+                            cout << "Crafted." << endc;
                             carpenter_lv_1 = now;
                             Sleep(800);
                         }
@@ -141,7 +141,7 @@ SGET_RET Town_1::operator()(string arg)
                             {
                                 gb.invent_add("wood", 1, 5);
                                 gb.get_exp(25);
-                                cout << "Crafted." << endl;
+                                cout << "Crafted." << endc;
                                 carpenter_lv_1 = now;
                                 Sleep(800);
                             }
@@ -158,7 +158,7 @@ SGET_RET Town_1::operator()(string arg)
                         {
                             gb.invent_add("stick", 0, 5);
                             gb.get_exp(25);
-                            cout << "Crafted." << endl;
+                            cout << "Crafted." << endc;
                             carpenter_lv_1 = now;
                             Sleep(800);
                         }
@@ -173,7 +173,7 @@ SGET_RET Town_1::operator()(string arg)
                             {
                                 gb.invent_add("ladder", 1, 1);
                                 gb.get_exp(50);
-                                cout << "Crafted." << endl;
+                                cout << "Crafted." << endc;
                                 carpenter_lv_1 = now;
                                 Sleep(800);
                             }
@@ -192,17 +192,17 @@ SGET_RET Town_1::operator()(string arg)
             if (now - mason_lv_1 < 60)
             {
                 System_Clear();
-                cout << "The mason isn't rested! He needs to rest for 1 min." << endl;
+                cout << "The mason isn't rested! He needs to rest for " << red << "1 min" << reset << "." << endc;
                 Sleep(1000);
             }
             else
             {
                 System_Clear();
-                cout << "   Mason" << endl;
-                cout << " - 10 * lv.0 rock -> 1 * lv.1 stone + 25 exp (1)" << endl;
-                cout << " - 10 * lv.0 rock + 1 * lv.0 coin -> 5 * lv.1 rock + 25 exp (2)" << endl;
-                cout << " - 1 * lv.1 stone + 2 * lv.0 stick -> 1 * lv.1 hammer + 50 exp (3)" << endl;
-                cout << " - 2 * lv.1 stone + 2 * lv.0 stick -> 1 * lv.1 axe + 75 exp(4)" << endl;
+                cout << "   Mason" << endc;
+                cout << green << " - 10 * lv.0 rock -> 1 * lv.1 stone + 25 exp (1)" << endc;
+                cout << green << " - 10 * lv.0 rock + 1 * lv.0 coin -> 5 * lv.1 rock + 25 exp (2)" << endc;
+                cout << yellow << " - 1 * lv.1 stone + 2 * lv.0 stick -> 1 * lv.1 hammer + 50 exp (3)" << endc;
+                cout << yellow << " - 2 * lv.1 stone + 2 * lv.0 stick -> 1 * lv.1 axe + 75 exp(4)" << endc;
                 if (getline(cin, input))
                 {
                     if (input == "1")
@@ -212,7 +212,7 @@ SGET_RET Town_1::operator()(string arg)
                         {
                             gb.invent_add("stone", 1, 1);
                             gb.get_exp(25);
-                            cout << "Crafted." << endl;
+                            cout << "Crafted." << endc;
                             mason_lv_1 = now;
                             Sleep(800);
                         }
@@ -227,7 +227,7 @@ SGET_RET Town_1::operator()(string arg)
                             {
                                 gb.invent_add("rock", 1, 5);
                                 gb.get_exp(25);
-                                cout << "Crafted." << endl;
+                                cout << "Crafted." << endc;
                                 mason_lv_1 = now;
                                 Sleep(800);
                             }
@@ -247,7 +247,7 @@ SGET_RET Town_1::operator()(string arg)
                             {
                                 gb.invent_add("hammer", 1, 1);
                                 gb.get_exp(50);
-                                cout << "Crafted." << endl;
+                                cout << "Crafted." << endc;
                                 mason_lv_1 = now;
                                 Sleep(800);
                             }
@@ -267,7 +267,7 @@ SGET_RET Town_1::operator()(string arg)
                             {
                                 gb.invent_add("axe", 1, 1);
                                 gb.get_exp(75);
-                                cout << "Crafted." << endl;
+                                cout << "Crafted." << endc;
                                 mason_lv_1 = now;
                                 Sleep(800);
                             }
@@ -281,28 +281,28 @@ SGET_RET Town_1::operator()(string arg)
             }
         }
         System_Clear();
-        cout << "       Town" << endl;
+        cout << green << "       Town" << endc;
         if (MADE_MAP >= 3 && gb.level >= 1)
         {
-            cout << "         To Northern Woods (U)";
+            cout << green << "         To Northern Woods (U)";
         }
-        cout << endl;
-        cout << endl;
+        cout << endc;
+        cout << endc;
         cout << "Back to Main Page (L)";
         if (MADE_MAP >= 7 && gb.level >= 2)
         {
-            cout << "     To Black Smith (R)";
+            cout << green << "     To Black Smith (R)";
         }
-        cout << endl;
-        cout << endl;
-        cout << "   > The town carpenter (C)" << endl;
-        cout << "   > The town mason (M)" << endl;
-        cout << endl;
+        cout << endc;
+        cout << endc;
+        cout << yellow << "   > The town carpenter (C)" << endc;
+        cout << "   > The town mason (M)" << endc;
+        cout << endc;
         if (MADE_MAP >= 2 && gb.level >= 1)
         {
-            cout << "         To Plains (D)";
+            cout << green << "         To Plains (D)";
         }
-        cout << endl;
+        cout << endc;
     }
     return sget(arg);
 }

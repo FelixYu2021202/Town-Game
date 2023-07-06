@@ -30,6 +30,7 @@ This is the Utilities code:
 #include "color.h"
 
 using namespace std;
+using namespace color;
 
 using ull = unsigned long long;
 #define MADE_MAP 1

@@ -15,7 +15,7 @@ The code is too long, so it is separated into several files and parts: (in githu
 
   - ```cpp
     #ifndef TG_LIB
-    #define TG_LIB "TG_LIB;Town Game by cosf;header-version;v0.7.0"
+    #define TG_LIB "TG_LIB;Town Game by cosf;header-version;v0.7.1"
     ```
 
   - [Utilities](/blog/35/64731bf78710066d92d29796 "utility.md")
@@ -46,6 +46,10 @@ g++ -g main.cpp -g centratown.cpp -o tg.exe -std=c++17
 The recommended ISO standard is `C++ 17(ISO/IEC 14882:2017)`.
 
 ## Update log
+
+### v0.7.1 (23.7.6)
+
+- Colorized scenes.
 
 ### v0.7.0 (23.6.28)
 
@@ -143,8 +147,8 @@ The `main.cpp` code is
 
 ```cpp
 // Game by cosf
-// v0.7.0
-// build 2023.6.28
+// v0.7.1
+// build 2023.7.6
 // unf
 // for more details please go to http://ac.hfoj.net/blog/35/6464e26c426c19a595da2748#1684333164277
 
@@ -161,7 +165,7 @@ int main()
 {
     if (gb.game_start())
     {
-        cout << "Game did not exit normally." << endl;
+        cout << "Game did not exit normally." << endc;
         return -1;
     }
     return 0;
@@ -244,6 +248,9 @@ public:
         return res;
     }
 
+    string scr[10] = {"25%   ", "5%    ", "3%    ", "2%    ", "1%    ", "0.4%  ", "0.1%  ", "0.025%", "0.005%"};
+    vector<void (*)()> lvc;
+
     // Game Data Analysing (Level)
 
     int level = 1;
@@ -301,52 +308,57 @@ public:
         }
         if (!able.size())
         {
-            cout << "   Purchase" << endl;
-            cout << endl;
-            cout << "You don't have enough to buy it!" << endl;
-            cout << "Enter to be back." << endl;
+            lvc[sc]();
+            cout << "   Purchase" << endc;
+            cout << endc;
+            cout << red << "You don't have enough to buy it!" << endc;
+            cout << "Enter to be back." << endc;
             string input;
             getline(cin, input);
             return {-1, -1};
         }
         int slen = max(8UL, 2 + in.length());
-        cout << "   Purchase" << endl;
-        cout << sn << endl;
-        cout << endl;
-        cout << "These are the options you can choose(only one):" << endl;
-        cout << "|" << string("-") * slen << "|" << string("-------|") * able.size() << endl;
-        cout << "| " << left << setw(slen - 1) << "level"
+        lvc[sc]();
+        cout << "   Purchase" << endc;
+        cout << sn << endc;
+        cout << endc;
+        cout << "These are the options you can choose(only one):" << endc;
+        cout << yellow << "|" << string("-") * slen << "|" << string("-------|") * able.size() << endc;
+        cout << yellow << "| " << left << setw(slen - 1) << "level"
              << "|";
         for (int i : able)
         {
-            cout << "  " << left << setw(4) << i << " |";
+            lvc[i]();
+            cout << "  " << left << setw(4) << i << yellow << " |";
         }
-        cout << endl;
-        cout << "|" << string("-") * slen << "|" << string("-------|") * able.size() << endl;
-        cout << "| " << left << setw(slen - 1) << in
+        cout << endc;
+        cout << yellow << "|" << string("-") * slen << "|" << string("-------|") * able.size() << endc;
+        cout << yellow << "| " << left << setw(slen - 1) << in
              << "|";
         for (int i : able)
         {
-            cout << "  " << left << setw(4) << itos(invent[in][i]) << " |";
+            lvc[i]();
+            cout << "  " << left << setw(4) << itos(invent[in][i]) << yellow << " |";
         }
-        cout << endl;
-        cout << "|" << string("-") * slen << "|" << string("-------|") * able.size() << endl;
-        cout << "|" << string(" ") * slen << "|";
+        cout << endc;
+        cout << yellow << "|" << string("-") * slen << "|" << string("-------|") * able.size() << endc;
+        cout << yellow << "|" << string(" ") * slen << "|";
         for (int i : able)
         {
-            cout << " -" << left << setw(4) << itos(nd[i]) << " |";
+            cout << red << " -" << left << setw(4) << itos(nd[i]) << yellow << " |";
         }
-        cout << endl;
-        cout << "|" << string("-") * slen << "|" << string("-------|") * able.size() << endl;
-        cout << "| " << left << setw(slen - 1) << "result"
+        cout << endc;
+        cout << yellow << "|" << string("-") * slen << "|" << string("-------|") * able.size() << endc;
+        cout << yellow << "| " << left << setw(slen - 1) << "result"
              << "|";
         for (int i : able)
         {
-            cout << "  " << left << setw(4) << itos(invent[in][i] - nd[i]) << " |";
+            lvc[i]();
+            cout << "  " << left << setw(4) << itos(invent[in][i] - nd[i]) << yellow << " |";
         }
-        cout << endl;
-        cout << "|" << string("-") * slen << "|" << string("-------|") * able.size() << endl;
-        cout << "Please enter the choice(0 ~ 9) or abort(any other)." << endl;
+        cout << endc;
+        cout << yellow << "|" << string("-") * slen << "|" << string("-------|") * able.size() << endc;
+        cout << "Please enter the choice(" << green << "0" << reset << " ~ " << white << "9" << reset << ") or abort(any other)." << endc;
         string input;
         getline(cin, input);
         if (isdigit(input[0]))
@@ -364,13 +376,13 @@ public:
 
     SGET_RET main_page(string arg)
     {
-        cout << "          Main page" << endl;
-        cout << "> Inventory(C) > Level(E)" << endl;
-        cout << "> Store(P)" << endl;
-        cout << "> Explore(F)" << endl;
-        cout << "> Load(L)      > Save(S)" << endl;
-        cout << "> Quit(Q)      > Save & Quit(A)" << endl;
-        cout << "> Introduction(I)" << endl;
+        cout << "          Main page" << endc;
+        cout << magenta << "> Inventory(C) > Level(E)" << endc;
+        cout << green << "> Store(P)" << endc;
+        cout << blue << "> Explore(F)" << endc;
+        cout << green << "> Load(L)      > Save(S)" << endc;
+        cout << red << "> Quit(Q)      > Save & Quit(A)" << endc;
+        cout << "> Introduction(I)" << endc;
         string input;
         while (getline(cin, input))
         {
@@ -411,23 +423,23 @@ public:
             {
                 return sget("town_1;main_page;exit;");
             }
-            cout << "          Main page" << endl;
-            cout << "> Inventory(C) > Level(E)" << endl;
-            cout << "> Store(P)" << endl;
-            cout << "> Explore(F)" << endl;
-            cout << "> Load(L)      > Save(S)" << endl;
-            cout << "> Quit(Q)      > Save & Quit(A)" << endl;
-            cout << "> Introduction(I)" << endl;
+            cout << "          Main page" << endc;
+            cout << magenta << "> Inventory(C) > Level(E)" << endc;
+            cout << green << "> Store(P)" << endc;
+            cout << blue << "> Explore(F)" << endc;
+            cout << green << "> Load(L)      > Save(S)" << endc;
+            cout << red << "> Quit(Q)      > Save & Quit(A)" << endc;
+            cout << "> Introduction(I)" << endc;
         }
         return sget("exit;exit;");
     }
 
     SGET_RET introduction(string arg)
     {
-        cout << "    Introduction" << endl;
-        cout << "This is a text game(unfinished) by cosf. Players can explore the world in this game." << endl;
-        cout << endl;
-        cout << "> Exit(Q)" << endl;
+        cout << "    Introduction" << endc;
+        cout << "This is a text game(unfinished) by " << blue << "cosf" << reset << ". Players can explore the world in this game." << endc;
+        cout << endc;
+        cout << red << "> Exit(Q)" << endc;
         string input;
         while (getline(cin, input))
         {
@@ -436,10 +448,10 @@ public:
             {
                 return sget("main_page;exit;");
             }
-            cout << "    Update Log" << endl;
-            cout << "This is a text game(unfinished) by cosf. Players can explore the world in this game." << endl;
-            cout << endl;
-            cout << "> Exit(Q)" << endl;
+            cout << "    Introduction" << endc;
+            cout << "This is a text game(unfinished) by " << blue << "cosf" << reset << ". Players can explore the world in this game." << endc;
+            cout << endc;
+            cout << red << "> Exit(Q)" << endc;
         }
         return sget("exit;exit;");
     }
@@ -449,10 +461,11 @@ public:
         SGET_RET par = sget(arg);
         if (par.curtsk == "save")
         {
-            cout << "   Save Game Progress" << endl;
-            cout << "Which file do you want to save to?" << endl;
+            cout << green << "   Save Game Progress" << endc;
+            cout << "Which file do you want to save to?" << endc << green;
             string fin;
             cin >> fin;
+            cout << reset;
             invent_cleanup();
             update_level();
             ofstream file(fin);
@@ -479,10 +492,11 @@ public:
         }
         elif (par.curtsk == "load")
         {
-            cout << "   Load Game Progress" << endl;
-            cout << "Which file do you want to load?" << endl;
+            cout << green << "   Load Game Progress" << endc;
+            cout << "Which file do you want to load?" << endc << green;
             string fin;
             cin >> fin;
+            cout << reset;
             ifstream file(fin);
             invent.clear();
             invent_names.clear();
@@ -548,34 +562,56 @@ public:
     {
         invent_cleanup();
         string craft_line = "(Place for crafting)";
-        cout << "    Inventory" << endl;
-        cout << endl;
-        cout << craft_line << endl;
-        cout << endl;
-        cout << "|--------------------|------|------|------|------|------|------|------|------|------|------|" << endl;
-        cout << "| Name of Stuff      | lv.0 | lv.1 | lv.2 | lv.3 | lv.4 | lv.5 | lv.6 | lv.7 | lv.8 | lv.9 |" << endl;
+        cout << magenta << "    Inventory" << endc;
+        cout << endc;
+        cout << red << craft_line << endc;
+        cout << endc;
+        cout << yellow << "|--------------------|------|------|------|------|------|------|------|------|------|------|" << endc;
+        cout << yellow << "| Name of Stuff      |";
+        for (int i = 0; i < 10; i++)
+        {
+            lvc[i]();
+            cout << " lv." << i << " " << yellow << "|";
+        }
+        cout << endc;
         for (string in : invent_names)
         {
-            cout << "|--------------------|------|------|------|------|------|------|------|------|------|------|" << endl;
+            cout << yellow << "|--------------------|------|------|------|------|------|------|------|------|------|------|" << endc;
             cout << "| " << left << setw(18) << in << " |";
             for (int i = 0; i < 10; i++)
             {
-                cout << " " << left << setw(4) << itos(invent[in][i]) << " |";
+                lvc[i]();
+                cout << " " << left << setw(4) << itos(invent[in][i]) << " " << yellow << "|";
             }
-            cout << endl;
+            cout << endc;
         }
-        cout << "|--------------------|------|------|------|------|------|------|------|------|------|------|" << endl;
-        cout << endl;
-        cout << "> Exit(Q)" << endl;
-        cout << "> Craft(C): the form is \"C;type;level;number;\", for example, \"C;wood;0;2\"" << endl;
-        cout << "tips: Make sure you really want to craft it, since it's not undo-able." << endl;
-        cout << "The success rates are:" << endl;
-        cout << "|--------|--------|--------|--------|--------|--------|--------|--------|--------|" << endl;
-        cout << "| lv0=>1 | lv1=>2 | lv2=>3 | lv3=>4 | lv4=>5 | lv5=>6 | lv6=>7 | lv7=>8 | lv8=>9 |" << endl;
-        cout << "| 25%    | 5%     | 3%     | 2%     | 1%     | 0.4%   | 0.1%   | 0.025% | 0.005% |" << endl;
-        cout << "|--------|--------|--------|--------|--------|--------|--------|--------|--------|" << endl;
-        cout << endl;
-        cout << "> Hourly Reward(D): if the last time you get this reward is over 1h, you will get 10 lv.0(1 for lv. 6+, 2 for lv. 9+) coins." << endl;
+        cout << yellow << "|--------------------|------|------|------|------|------|------|------|------|------|------|" << endc;
+        cout << endc;
+        cout << red << "> Exit(Q)" << endc;
+        cout << magenta << "> Craft(C): " << reset << "the form is \"" << magenta << "C" << reset << ";type;" << yellow << "level" << reset << ";number;\", for example, \"" << magenta << "C" << reset << ";wood;" << green << "0" << reset << ";2\"" << endc;
+        cout << red << "tips: Make sure you really want to craft it, since it's not undo-able." << endc;
+        cout << "The success rates are:" << endc;
+        cout << yellow << "|--------|--------|--------|--------|--------|--------|--------|--------|--------|" << endc;
+        cout << yellow << "|";
+        for (int i = 0; i < 9; i++)
+        {
+            cout << " " << reset << "lv";
+            lvc[i]();
+            cout << i << reset << "=>";
+            lvc[i + 1]();
+            cout << i + 1 << yellow << " |";
+        }
+        cout << endc;
+        cout << yellow << "|";
+        for (int i = 0; i < 9; i++)
+        {
+            lvc[i + 1]();
+            cout << " " << scr[i] << " " << yellow << "|";
+        }
+        cout << endc;
+        cout << yellow << "|--------|--------|--------|--------|--------|--------|--------|--------|--------|" << endc;
+        cout << endc;
+        cout << green << "> Hourly Reward(D): if the last time you get this reward is over 1h, you will get 10 lv.0(1 for lv. 6+, 2 for lv. 9+) coins." << endc;
         string input;
         while (getline(cin, input))
         {
@@ -626,34 +662,56 @@ public:
                 }
             }
             System_Clear();
-            cout << "    Inventory" << endl;
-            cout << endl;
-            cout << craft_line << endl;
-            cout << endl;
-            cout << "|--------------------|------|------|------|------|------|------|------|------|------|------|" << endl;
-            cout << "| Name of Stuff      | lv.0 | lv.1 | lv.2 | lv.3 | lv.4 | lv.5 | lv.6 | lv.7 | lv.8 | lv.9 |" << endl;
+            cout << magenta << "    Inventory" << endc;
+            cout << endc;
+            cout << red << craft_line << endc;
+            cout << endc;
+            cout << yellow << "|--------------------|------|------|------|------|------|------|------|------|------|------|" << endc;
+            cout << yellow << "| Name of Stuff      |";
+            for (int i = 0; i < 10; i++)
+            {
+                lvc[i]();
+                cout << " lv." << i << " " << yellow << "|";
+            }
+            cout << endc;
             for (string in : invent_names)
             {
-                cout << "|--------------------|------|------|------|------|------|------|------|------|------|------|" << endl;
+                cout << yellow << "|--------------------|------|------|------|------|------|------|------|------|------|------|" << endc;
                 cout << "| " << left << setw(18) << in << " |";
                 for (int i = 0; i < 10; i++)
                 {
-                    cout << " " << left << setw(4) << itos(invent[in][i]) << " |";
+                    lvc[i]();
+                    cout << " " << left << setw(4) << itos(invent[in][i]) << " " << yellow << "|";
                 }
-                cout << endl;
+                cout << endc;
             }
-            cout << "|--------------------|------|------|------|------|------|------|------|------|------|------|" << endl;
-            cout << endl;
-            cout << "> Exit(Q)" << endl;
-            cout << "> Craft(C): the form is \"C;type;level;number;\", for example, \"C;wood;0;2\"" << endl;
-            cout << "tips: Make sure you really want to craft it, since it's not undo-able." << endl;
-            cout << "The success rates are:" << endl;
-            cout << "|--------|--------|--------|--------|--------|--------|--------|--------|--------|" << endl;
-            cout << "| lv0=>1 | lv1=>2 | lv2=>3 | lv3=>4 | lv4=>5 | lv5=>6 | lv6=>7 | lv7=>8 | lv8=>9 |" << endl;
-            cout << "| 25%    | 5%     | 3%     | 2%     | 1%     | 0.4%   | 0.1%   | 0.025% | 0.005% |" << endl;
-            cout << "|--------|--------|--------|--------|--------|--------|--------|--------|--------|" << endl;
-            cout << endl;
-            cout << "> Hourly Reward(D): if the last time you get this reward is over 1h, you will get 10 lv.0(1 for lv. 6+, 2 for lv. 9+) coins." << endl;
+            cout << yellow << "|--------------------|------|------|------|------|------|------|------|------|------|------|" << endc;
+            cout << endc;
+            cout << red << "> Exit(Q)" << endc;
+            cout << magenta << "> Craft(C): " << reset << "the form is \"" << magenta << "C" << reset << ";type;" << yellow << "level" << reset << ";number;\", for example, \"" << magenta << "C" << reset << ";wood;" << green << "0" << reset << ";2\"" << endc;
+            cout << red << "tips: Make sure you really want to craft it, since it's not undo-able." << endc;
+            cout << "The success rates are:" << endc;
+            cout << yellow << "|--------|--------|--------|--------|--------|--------|--------|--------|--------|" << endc;
+            cout << yellow << "|";
+            for (int i = 0; i < 9; i++)
+            {
+                cout << " " << reset << "lv";
+                lvc[i]();
+                cout << i << reset << "=>";
+                lvc[i + 1]();
+                cout << i + 1 << yellow << " |";
+            }
+            cout << endc;
+            cout << yellow << "|";
+            for (int i = 0; i < 9; i++)
+            {
+                lvc[i + 1]();
+                cout << " " << scr[i] << " " << yellow << "|";
+            }
+            cout << endc;
+            cout << yellow << "|--------|--------|--------|--------|--------|--------|--------|--------|--------|" << endc;
+            cout << endc;
+            cout << green << "> Hourly Reward(D): if the last time you get this reward is over 1h, you will get 10 lv.0(1 for lv. 6+, 2 for lv. 9+) coins." << endc;
         }
         return sget(arg);
     }
@@ -661,15 +719,21 @@ public:
     SGET_RET level_page(string arg)
     {
         update_level();
-        cout << "    Level" << endl;
-        cout << "Currently your level is lv." << level << '.' << endl;
-        cout << right << setw(15) << exp << " / " << left << setw(15) << lne[level] << endl;
+        cout << magenta << "    Level" << endc;
+        cout << "Currently your level is lv.";
+        lvc[level - 1]();
+        cout << level << '.' << endc;
+        lvc[level - 1]();
+        cout << right << setw(15) << exp << reset << " / ";
+        lvc[level - 1]();
+        cout << left << setw(15) << lne[level] << endc;
         int sw = exp * 31 / lne[level];
         int rt = 31 - sw;
-        cout << "["
-             << string("*") * sw << string(".") * rt << "]" << endl;
-        cout << endl;
-        cout << "> Exit(Q)" << endl;
+        cout << "[";
+        lvc[level - 1]();
+        cout << string("*") * sw << reset << string(" ") * rt << "]" << endc;
+        cout << endc;
+        cout << "> Exit(Q)" << endc;
         string input;
         while (getline(cin, input))
         {
@@ -683,13 +747,14 @@ public:
 
     SGET_RET store_page(string arg)
     {
-        cout << "   Version's Offer" << endl;
-        cout << endl;
-        cout << "> lv.0 wood * 10 (5 * lv.0 coins) (1)" << endl;
-        cout << "> lv.0 rock * 10 (6 * lv.0 coins) (2)" << endl;
-        cout << "> lv.1 wood * 5 (10 * lv.0 coins) (3)" << endl;
-        cout << endl;
-        cout << "> Exit(Q)" << endl;
+        cout << "   Version's Offer" << endc;
+        cout << endc;
+        cout << green << "> lv.0 wood * 10 (5 * lv.0 coins) (1)" << endc;
+        cout << green << "> lv.0 rock * 10 (6 * lv.0 coins) (2)" << endc;
+        cout << green << "> lv.1 stone * 1 (3 * lv.1 coins) (3)" << endc;
+        cout << green << "> lv.1 plank * 1 (2 * lv.0 coins) (4)" << endc;
+        cout << endc;
+        cout << "> Exit(Q)" << endc;
         string input;
         while (getline(cin, input))
         {
@@ -713,19 +778,27 @@ public:
             }
             elif (input == "3")
             {
-                if (purchase("lv.1 wood * 5", "coin", 0, 10).first != -1)
+                if (purchase("lv.1 stone * 1", "coin", 1, 3).first != -1)
                 {
-                    invent_add("wood", 1, 5);
+                    invent_add("stone", 1, 1);
+                }
+            }
+            elif (input == "4")
+            {
+                if (purchase("lv.1 plank * 1", "coin", 1, 2).first != -1)
+                {
+                    invent_add("plank", 1, 1);
                 }
             }
             System_Clear();
-            cout << "   Version's Offer" << endl;
-            cout << endl;
-            cout << "> lv.0 wood * 10 (5 * lv.0 coins) (1)" << endl;
-            cout << "> lv.0 rock * 10 (6 * lv.0 coins) (2)" << endl;
-            cout << "> lv.1 wood * 5 (10 * lv.0 coins) (3)" << endl;
-            cout << endl;
-            cout << "> Exit(Q)" << endl;
+            cout << "   Version's Offer" << endc;
+            cout << endc;
+            cout << green << "> lv.0 wood * 10 (5 * lv.0 coins) (1)" << endc;
+            cout << green << "> lv.0 rock * 10 (6 * lv.0 coins) (2)" << endc;
+            cout << green << "> lv.1 stone * 1 (3 * lv.1 coins) (3)" << endc;
+            cout << green << "> lv.1 plank * 1 (2 * lv.0 coins) (4)" << endc;
+            cout << endc;
+            cout << "> Exit(Q)" << endc;
         }
         return sget(arg);
     }
@@ -739,6 +812,16 @@ public:
     {
         tst = mt19937(time(0));
         invent_add("coin", 0, 50);
+        lvc.push_back(set_green);
+        lvc.push_back(set_green);
+        lvc.push_back(set_yellow);
+        lvc.push_back(set_yellow);
+        lvc.push_back(set_blue);
+        lvc.push_back(set_magenta);
+        lvc.push_back(set_red);
+        lvc.push_back(set_cyan);
+        lvc.push_back(set_black);
+        lvc.push_back(set_white);
     }
     int game_start()
     {
