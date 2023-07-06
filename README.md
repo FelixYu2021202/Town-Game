@@ -2,9 +2,13 @@
 
 This is a text game(unfinished) by cosf. Players can explore the world in this game.
 
-See more in `intro.md`. The links in these markdown files are not usable in github. Hover on a link and a markdown file name will appears.
+See more in `intro.md`. The links in these markdown files are not usable in github. Hover on a link and a markdown file name will appear.
 
 ## Update log
+
+### v0.7.1 (23.7.6)
+
+- Colorized scenes.
 
 ### v0.7.0 (23.6.28)
 
