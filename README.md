@@ -6,6 +6,11 @@ See more in `intro.md`. The links in these markdown files are not usable in gith
 
 ## Update log
 
+## v0.7.2 (23.7.13)
+
+- Added one map.
+- Fixed one map.
+
 ### v0.7.1 (23.7.6)
 
 - Colorized scenes.
