@@ -1,5 +1,5 @@
 #ifndef TG_LIB
-#define TG_LIB "TG_LIB;Town Game by cosf;header-version;v0.7.1"
+#define TG_LIB "TG_LIB;Town Game by cosf;header-version;v0.7.2"
 
 // Utilities
 
@@ -8,6 +8,7 @@
 #include <fstream>
 #include <sstream>
 #include <cstring>
+#include <numeric>
 #include <random>
 #include <vector>
 #include <ctime>
@@ -28,7 +29,7 @@ using namespace std;
 using namespace color;
 
 using ull = unsigned long long;
-#define MADE_MAP 1
+#define MADE_MAP 2
 
 struct SGET_RET
 {
@@ -38,8 +39,10 @@ struct SGET_RET
 
 #define elif else if
 #define pii pair<int, ull>
+#define puu pair<ull, ull>
 #define sstream stringstream
 #define next(i) i = sget(i.curarg)
+#define stoi stoull
 
 #if !(defined(__WINDOWS_) || defined(_WIN32))
 static void Sleep(unsigned int ms)
@@ -120,7 +123,14 @@ static string itos(ull i)
     }
 }
 
+static puu reduce(puu f)
+{
+    ull g = gcd(f.first, f.second);
+    return {f.first / g, f.second / g};
+}
+
 // Map Declarations
+
 class ExploreMap
 {
 public:
@@ -134,6 +144,57 @@ class Town_1 : public ExploreMap
 public:
     ull carpenter_lv_1 = 0;
     ull mason_lv_1 = 0;
+    ull merchant_lv_1 = 0;
+    SGET_RET operator()(string);
+    string save();
+    SGET_RET load(SGET_RET);
+};
+
+class Plains_2 : public ExploreMap
+{
+public:
+    ull craft_house_lv_1 = 0;
+    ull mining_lv_1 = 0;
+    ull explore_lv_1 = 0;
+    int explore_stage = -1;
+    const string explore_message[10] = {
+        "Walk along the stream. There must be something beside it.", // Nothing, 10 exp
+        "You met a house. What‘s in it?",                            // Unlock Craft House, 15 exp
+        "Bruh, there are no bridges! How to get to the other side!", // Unlock recipe for rope, able to build bridge, 10 exp
+        "Bridges aren't enough! Boats.",                             // Unlock recipe for boat, 10 exp
+        ".......****.................**...................\n"
+        "......*******.............***....................\n"
+        ".......*************.....**......................\n"
+        ".........****************........................\n"
+        "...........*************.......................]]\n"
+        "........... ..*********.....................,ooOO\n"
+        "............. ..*****....................../OOOOO\n"
+        ".........................................,oOOOOOO\n"
+        "........................................*ooOOOOOO\n"
+        "............................]@@@^......,ooOOOo/`.\n"
+        "..........................*=O@@@@@O]]oooOOOoo*...\n"
+        "...........................*oO@@@@@@@OOOOOO/.....\n"
+        ".................]@@Oo\\]]]]ooOO@@@@@@@OOOOo*.....\n"
+        "................=@@@@@@@@OOOOOOO@@@@@@@@@Oo**....\n"
+        ".................,@@@@@@@@@@@OOOO@@@@@@@@@@OOOOOo\n"
+        "...................\\@@@@@@@@@@OOOO@@@@@@@@@@@OOOO\n"
+        "..................../O@@@@@@@@@@OOOOO@@@@@@@@OOOO\n"
+        " .................**oOOO@@@@@@@@@@@OOOO@@@@@@@@@O\n"
+        " .............,]]/oooOOOO@@@@@@@@@@@@@@O@@@@@@@@@\n"
+        "........,]ooOOooooOoo/[[[\\O@@@@@@@@@@@@@@@@@OOO/*\n"
+        ".....,oooooooOOooOOo*.....*o@@@@@@@@@@@@@@@OO/...\n"
+        ".*ooooooOooOoOOOOO`.......*=OOO@@@@@@@@@@@OO^....\n"
+        " ....,\\oOOOOoO/[**.....*]]]/oooooO@@@@@@@O/......\n"
+        "!!!!!....*.........*,oOOOOoo`*****..*,[`.........\n"
+        "!!!!!!!!...........,OOOOOOOo^**......**..........\n\n"
+        "It's definitely a picture of here. A bridge, a\n"
+        "house, a... what is that? Something red?",      // Nothing, 25 exp
+        "A book of sword.",                              // Unlock recipe for sword, 20 exp
+        "Fine, the red stuff isn't around me.",          // Nothing, 20 exp
+        "A book of resource",                            // Unlock recipe for pickaxe, unlock mining, 10 exp
+        "I'm to the woods!",                             // Unlock the map `Woods`, 15 exp
+        "It's never gonna be peaceful in other places.", // Unlock the map `Ponds`, 15 exp
+    };
     SGET_RET operator()(string);
     string save();
     SGET_RET load(SGET_RET);
@@ -148,7 +209,7 @@ public:
 
     map<string, vector<ull>> invent;
     set<string> invent_names;
-    mt19937 tst;
+    mt19937_64 tst;
 
     void invent_cleanup()
     {
@@ -199,7 +260,7 @@ public:
 
     ull sucde[9] = {4, 20, 100, 50, 100, 250, 1000, 4000, 20000};
     ull sucnu[9] = {1, 1, 3, 1, 1, 1, 1, 1, 1};
-    ull cvslu[9] = {3, 15, 20, 30, 50, 100, 200, 500, 1000};
+    ull cvslu[9] = {3, 15, 20, 30, 50, 100, 250, 750, 2500};
     ull cvsld[10] = {0, 5, 25, 45, 70, 150, 400, 1500, 7000, 35000};
     ull craft(ull num, ull de, ull nu)
     {
@@ -285,7 +346,7 @@ public:
         cout << "   Purchase" << endc;
         cout << sn << endc;
         cout << endc;
-        cout << "These are the options you can choose(only one):" << endc;
+        cout << "These are the options you can choose (only one):" << endc;
         cout << yellow << "|" << string("-") * slen << "|" << string("-------|") * able.size() << endc;
         cout << yellow << "| " << left << setw(slen - 1) << "level"
              << "|";
@@ -330,6 +391,81 @@ public:
             {
                 invent_purchase(in, input[0] ^ '0', nd[input[0] ^ '0']);
                 return {input[0] ^ '0', nd[input[0] ^ '0']};
+            }
+        }
+        return {-1, 0};
+    }
+
+    pii consume(string sn, string in, int sc, ull de, ull num, ull mud, ull mun)
+    {
+        vector<int> able;
+        vector<puu> rate;
+        for (int i = 0; i < 10; i++)
+        {
+            if (check_purchase(in, i, 1))
+            {
+                able.push_back(i);
+            }
+        }
+        while (sc > 0)
+        {
+            de *= mun;
+            num *= mud;
+            tie(de, num) = reduce({de, num});
+            sc--;
+        }
+        cout << "   Choose one to consume." << endc;
+        cout << sn << endc;
+        cout << endc;
+        int slen = max(13UL, in.length() + 2);
+        cout << "These are the options you can choose (only one):" << endc;
+        cout << yellow << "|" << string("-") * slen << "|" << string("--------|") * able.size() << endc;
+        cout << yellow << "| " << left << setw(slen - 1) << "level"
+             << "|";
+        for (int i : able)
+        {
+            lvc[i]();
+            cout << " " << left << setw(6) << i << yellow << " |";
+        }
+        cout << endc;
+        cout << yellow << "|" << string("-") * slen << "|" << string("--------|") * able.size() << endc;
+        cout << yellow << "| " << left << setw(slen - 1) << in << "|";
+        for (int i : able)
+        {
+            lvc[i]();
+            cout << " " << left << setw(6) << itos(invent[in][i]) << yellow << " |";
+        }
+        cout << endc;
+        cout << yellow << "|" << string("-") * slen << "|" << string("--------|") * able.size() << endc;
+        cout << yellow << "| " << left << setw(slen - 1) << "remain rate"
+             << "|";
+        for (int i = 0; i < 9; i++)
+        {
+            rate.push_back({de, num});
+            if (binary_search(able.begin(), able.end(), i))
+            {
+                lvc[i]();
+                cout << " " << left << setw(5) << to_string(num * 100UL * 1.0L / de).substr(0, 5) << "%" << yellow << " |";
+            }
+            de *= mud;
+            num *= mun;
+            tie(de, num) = reduce({de, num});
+        }
+        cout << endc;
+        cout << yellow << "|" << string("-") * slen << "|" << string("--------|") * able.size() << endc;
+        cout << "Please enter the choice(" << green << "0" << reset << " ~ " << white << "9" << reset << ") or abort(any other)." << endc;
+        string input;
+        getline(cin, input);
+        if (isdigit(input[0]))
+        {
+            if (binary_search(able.begin(), able.end(), input[0] ^ '0'))
+            {
+                ull rem = craft(1UL, rate[input[0] ^ '0'].first, rate[input[0] ^ '0'].second);
+                if (!rem)
+                {
+                    invent_purchase(in, input[0] ^ '0', 1);
+                }
+                return {input[0] ^ '0', 1UL - rem};
             }
         }
         return {-1, 0};
@@ -449,6 +585,7 @@ public:
             // For Explore Maps
 
             file << "town_1;" << town_1.save();
+            file << "plains_2;" << plains_2.save();
 
             //
             return sget(par.curarg + "exit;");
@@ -473,7 +610,7 @@ public:
                     next(tgm);
                     next(tgm);
                 }
-                elif (tgm.curtsk == "invent")
+                if (tgm.curtsk == "invent")
                 {
                     next(tgm);
                     int nos = stoi(tgm.curtsk);
@@ -489,7 +626,7 @@ public:
                         }
                     }
                 }
-                elif (tgm.curtsk == "level")
+                if (tgm.curtsk == "level")
                 {
                     next(tgm);
                     level = stoi(tgm.curtsk);
@@ -497,19 +634,23 @@ public:
                     exp = stoi(tgm.curtsk);
                     next(tgm);
                 }
-                elif (tgm.curtsk == "reward")
+                if (tgm.curtsk == "reward")
                 {
                     next(tgm);
                     lstr = stoi(tgm.curtsk);
                     next(tgm);
                 }
-                elif (tgm.curtsk == "maps")
+                if (tgm.curtsk == "maps")
                 {
                     next(tgm);
                     // For Explore Maps
                     if (tgm.curtsk == "town_1")
                     {
                         tgm = town_1.load(tgm);
+                    }
+                    if (tgm.curtsk == "plains_2")
+                    {
+                        tgm = plains_2.load(tgm);
                     }
                     //
                 }
@@ -714,8 +855,8 @@ public:
         cout << endc;
         cout << green << "> lv.0 wood * 10 (5 * lv.0 coins) (1)" << endc;
         cout << green << "> lv.0 rock * 10 (6 * lv.0 coins) (2)" << endc;
-        cout << green << "> lv.1 stone * 1 (3 * lv.1 coins) (3)" << endc;
-        cout << green << "> lv.1 plank * 1 (2 * lv.0 coins) (4)" << endc;
+        cout << yellow << "> lv.1 stone * 1 (3 * lv.1 coins) (3)" << endc;
+        cout << yellow << "> lv.1 plank * 1 (2 * lv.1 coins) (4)" << endc;
         cout << endc;
         cout << "> Exit(Q)" << endc;
         string input;
@@ -758,8 +899,8 @@ public:
             cout << endc;
             cout << green << "> lv.0 wood * 10 (5 * lv.0 coins) (1)" << endc;
             cout << green << "> lv.0 rock * 10 (6 * lv.0 coins) (2)" << endc;
-            cout << green << "> lv.1 stone * 1 (3 * lv.1 coins) (3)" << endc;
-            cout << green << "> lv.1 plank * 1 (2 * lv.0 coins) (4)" << endc;
+            cout << yellow << "> lv.1 stone * 1 (3 * lv.1 coins) (3)" << endc;
+            cout << yellow << "> lv.1 plank * 1 (2 * lv.1 coins) (4)" << endc;
             cout << endc;
             cout << "> Exit(Q)" << endc;
         }
@@ -769,11 +910,12 @@ public:
     // Game Maps (Explore)
 
     Town_1 town_1;
+    Plains_2 plains_2;
 
     // Game Launching
     GameBoard()
     {
-        tst = mt19937(time(0));
+        tst = mt19937_64(time(0));
         invent_add("coin", 0, 50);
         lvc.push_back(set_green);
         lvc.push_back(set_green);
@@ -825,6 +967,10 @@ public:
             elif (task.curtsk == "town_1")
             {
                 task = town_1(task.curarg);
+            }
+            elif (task.curtsk == "plains_2")
+            {
+                task = plains_2(task.curarg);
             }
             else
             {

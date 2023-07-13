@@ -97,7 +97,7 @@ public:
     template <typename _CT, typename _T>
     inline decltype(endl<_CT, _T>) &null_wrapper()
     {
-        return NullWrapper<0, 0, 0>::sentry<_CT, _T>;
+        return NullWrapper<0, 0, 0>::template sentry<_CT, _T>;
     }
 };
 
@@ -112,8 +112,6 @@ static ColorWrapper color_wrapper;
     {                                                                   \
         cout << name;                                                   \
     }
-#define STD_COLOR(fore, back, light) color_wrapper.wrapper<fore, back, light, char>()
-#define STD_COLOR_RESET color_wrapper.null_wrapper<char>()
 
 #if USE_NAMESPACE
 namespace color
@@ -139,7 +137,6 @@ namespace color
     DEFINE_COLOR(light_magenta, 35, 47, 1)
     DEFINE_COLOR(light_cyan, 36, 47, 1)
     DEFINE_COLOR(light_white, 37, 47, 1)
-    DEFINE_COLOR(reset, 0, 0, 0)
 #else  // REVERSE_COLOR
     DEFINE_COLOR(black, 30, 40, 0)
     DEFINE_COLOR(red, 31, 40, 0)
@@ -157,7 +154,6 @@ namespace color
     DEFINE_COLOR(light_magenta, 35, 40, 1)
     DEFINE_COLOR(light_cyan, 36, 40, 1)
     DEFINE_COLOR(light_white, 37, 40, 1)
-    DEFINE_COLOR(reset, 0, 0, 0)
 #endif // REVERSE_COLOR
 
 #else // USE_COLOR
@@ -178,9 +174,10 @@ DEFINE_COLOR(light_blue, 0, 0, 0)
 DEFINE_COLOR(light_magenta, 0, 0, 0)
 DEFINE_COLOR(light_cyan, 0, 0, 0)
 DEFINE_COLOR(light_white, 0, 0, 0)
-DEFINE_COLOR(reset, 0, 0, 0)
 
 #endif // USE_COLOR
+
+    DEFINE_COLOR(reset, 0, 0, 0)
 
     template <typename _CT, typename _T>
     inline basic_ostream<_CT, _T> &endc(basic_ostream<_CT, _T> &os)

@@ -15,7 +15,7 @@ The code is too long, so it is separated into several files and parts: (in githu
 
   - ```cpp
     #ifndef TG_LIB
-    #define TG_LIB "TG_LIB;Town Game by cosf;header-version;v0.7.1"
+    #define TG_LIB "TG_LIB;Town Game by cosf;header-version;v0.7.2"
     ```
 
   - [Utilities](/blog/35/64731bf78710066d92d29796 "utility.md")
@@ -46,6 +46,11 @@ g++ -g main.cpp -g centratown.cpp -o tg.exe -std=c++17
 The recommended ISO standard is `C++ 17(ISO/IEC 14882:2017)`.
 
 ## Update log
+
+## v0.7.2 (23.7.13)
+
+- Added one map.
+- Fixed one map.
 
 ### v0.7.1 (23.7.6)
 
@@ -147,8 +152,8 @@ The `main.cpp` code is
 
 ```cpp
 // Game by cosf
-// v0.7.1
-// build 2023.7.6
+// v0.7.2
+// build 2023.7.13
 // unf
 // for more details please go to http://ac.hfoj.net/blog/35/6464e26c426c19a595da2748#1684333164277
 
@@ -176,6 +181,7 @@ int main()
 The Game Board code is (note that it is in `tg.h`):
 
 ```cpp
+
 // Game Board
 
 class GameBoard
@@ -185,7 +191,7 @@ public:
 
     map<string, vector<ull>> invent;
     set<string> invent_names;
-    mt19937 tst;
+    mt19937_64 tst;
 
     void invent_cleanup()
     {
@@ -236,7 +242,7 @@ public:
 
     ull sucde[9] = {4, 20, 100, 50, 100, 250, 1000, 4000, 20000};
     ull sucnu[9] = {1, 1, 3, 1, 1, 1, 1, 1, 1};
-    ull cvslu[9] = {3, 15, 20, 30, 50, 100, 200, 500, 1000};
+    ull cvslu[9] = {3, 15, 20, 30, 50, 100, 250, 750, 2500};
     ull cvsld[10] = {0, 5, 25, 45, 70, 150, 400, 1500, 7000, 35000};
     ull craft(ull num, ull de, ull nu)
     {
@@ -322,7 +328,7 @@ public:
         cout << "   Purchase" << endc;
         cout << sn << endc;
         cout << endc;
-        cout << "These are the options you can choose(only one):" << endc;
+        cout << "These are the options you can choose (only one):" << endc;
         cout << yellow << "|" << string("-") * slen << "|" << string("-------|") * able.size() << endc;
         cout << yellow << "| " << left << setw(slen - 1) << "level"
              << "|";
@@ -367,6 +373,81 @@ public:
             {
                 invent_purchase(in, input[0] ^ '0', nd[input[0] ^ '0']);
                 return {input[0] ^ '0', nd[input[0] ^ '0']};
+            }
+        }
+        return {-1, 0};
+    }
+
+    pii consume(string sn, string in, int sc, ull de, ull num, ull mud, ull mun)
+    {
+        vector<int> able;
+        vector<puu> rate;
+        for (int i = 0; i < 10; i++)
+        {
+            if (check_purchase(in, i, 1))
+            {
+                able.push_back(i);
+            }
+        }
+        while (sc > 0)
+        {
+            de *= mun;
+            num *= mud;
+            tie(de, num) = reduce({de, num});
+            sc--;
+        }
+        cout << "   Choose one to consume." << endc;
+        cout << sn << endc;
+        cout << endc;
+        int slen = max(13UL, in.length() + 2);
+        cout << "These are the options you can choose (only one):" << endc;
+        cout << yellow << "|" << string("-") * slen << "|" << string("--------|") * able.size() << endc;
+        cout << yellow << "| " << left << setw(slen - 1) << "level"
+             << "|";
+        for (int i : able)
+        {
+            lvc[i]();
+            cout << " " << left << setw(6) << i << yellow << " |";
+        }
+        cout << endc;
+        cout << yellow << "|" << string("-") * slen << "|" << string("--------|") * able.size() << endc;
+        cout << yellow << "| " << left << setw(slen - 1) << in << "|";
+        for (int i : able)
+        {
+            lvc[i]();
+            cout << " " << left << setw(6) << itos(invent[in][i]) << yellow << " |";
+        }
+        cout << endc;
+        cout << yellow << "|" << string("-") * slen << "|" << string("--------|") * able.size() << endc;
+        cout << yellow << "| " << left << setw(slen - 1) << "remain rate"
+             << "|";
+        for (int i = 0; i < 9; i++)
+        {
+            rate.push_back({de, num});
+            if (binary_search(able.begin(), able.end(), i))
+            {
+                lvc[i]();
+                cout << " " << left << setw(5) << to_string(num * 100UL * 1.0L / de).substr(0, 5) << "%" << yellow << " |";
+            }
+            de *= mud;
+            num *= mun;
+            tie(de, num) = reduce({de, num});
+        }
+        cout << endc;
+        cout << yellow << "|" << string("-") * slen << "|" << string("--------|") * able.size() << endc;
+        cout << "Please enter the choice(" << green << "0" << reset << " ~ " << white << "9" << reset << ") or abort(any other)." << endc;
+        string input;
+        getline(cin, input);
+        if (isdigit(input[0]))
+        {
+            if (binary_search(able.begin(), able.end(), input[0] ^ '0'))
+            {
+                ull rem = craft(1UL, rate[input[0] ^ '0'].first, rate[input[0] ^ '0'].second);
+                if (!rem)
+                {
+                    invent_purchase(in, input[0] ^ '0', 1);
+                }
+                return {input[0] ^ '0', 1UL - rem};
             }
         }
         return {-1, 0};
@@ -486,6 +567,7 @@ public:
             // For Explore Maps
 
             file << "town_1;" << town_1.save();
+            file << "plains_2;" << plains_2.save();
 
             //
             return sget(par.curarg + "exit;");
@@ -510,7 +592,7 @@ public:
                     next(tgm);
                     next(tgm);
                 }
-                elif (tgm.curtsk == "invent")
+                if (tgm.curtsk == "invent")
                 {
                     next(tgm);
                     int nos = stoi(tgm.curtsk);
@@ -526,7 +608,7 @@ public:
                         }
                     }
                 }
-                elif (tgm.curtsk == "level")
+                if (tgm.curtsk == "level")
                 {
                     next(tgm);
                     level = stoi(tgm.curtsk);
@@ -534,19 +616,23 @@ public:
                     exp = stoi(tgm.curtsk);
                     next(tgm);
                 }
-                elif (tgm.curtsk == "reward")
+                if (tgm.curtsk == "reward")
                 {
                     next(tgm);
                     lstr = stoi(tgm.curtsk);
                     next(tgm);
                 }
-                elif (tgm.curtsk == "maps")
+                if (tgm.curtsk == "maps")
                 {
                     next(tgm);
                     // For Explore Maps
                     if (tgm.curtsk == "town_1")
                     {
                         tgm = town_1.load(tgm);
+                    }
+                    if (tgm.curtsk == "plains_2")
+                    {
+                        tgm = plains_2.load(tgm);
                     }
                     //
                 }
@@ -751,8 +837,8 @@ public:
         cout << endc;
         cout << green << "> lv.0 wood * 10 (5 * lv.0 coins) (1)" << endc;
         cout << green << "> lv.0 rock * 10 (6 * lv.0 coins) (2)" << endc;
-        cout << green << "> lv.1 stone * 1 (3 * lv.1 coins) (3)" << endc;
-        cout << green << "> lv.1 plank * 1 (2 * lv.0 coins) (4)" << endc;
+        cout << yellow << "> lv.1 stone * 1 (3 * lv.1 coins) (3)" << endc;
+        cout << yellow << "> lv.1 plank * 1 (2 * lv.1 coins) (4)" << endc;
         cout << endc;
         cout << "> Exit(Q)" << endc;
         string input;
@@ -795,8 +881,8 @@ public:
             cout << endc;
             cout << green << "> lv.0 wood * 10 (5 * lv.0 coins) (1)" << endc;
             cout << green << "> lv.0 rock * 10 (6 * lv.0 coins) (2)" << endc;
-            cout << green << "> lv.1 stone * 1 (3 * lv.1 coins) (3)" << endc;
-            cout << green << "> lv.1 plank * 1 (2 * lv.0 coins) (4)" << endc;
+            cout << yellow << "> lv.1 stone * 1 (3 * lv.1 coins) (3)" << endc;
+            cout << yellow << "> lv.1 plank * 1 (2 * lv.1 coins) (4)" << endc;
             cout << endc;
             cout << "> Exit(Q)" << endc;
         }
@@ -806,11 +892,12 @@ public:
     // Game Maps (Explore)
 
     Town_1 town_1;
+    Plains_2 plains_2;
 
     // Game Launching
     GameBoard()
     {
-        tst = mt19937(time(0));
+        tst = mt19937_64(time(0));
         invent_add("coin", 0, 50);
         lvc.push_back(set_green);
         lvc.push_back(set_green);
@@ -862,6 +949,10 @@ public:
             elif (task.curtsk == "town_1")
             {
                 task = town_1(task.curarg);
+            }
+            elif (task.curtsk == "plains_2")
+            {
+                task = plains_2(task.curarg);
             }
             else
             {
