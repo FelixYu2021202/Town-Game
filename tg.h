@@ -7,12 +7,10 @@
 #include <iomanip>
 #include <fstream>
 #include <sstream>
-#include <cstring>
 #include <numeric>
 #include <random>
 #include <vector>
 #include <ctime>
-#include <cmath>
 #include <set>
 #include <map>
 
@@ -157,6 +155,7 @@ public:
     ull mining_lv_1 = 0;
     ull explore_lv_1 = 0;
     int explore_stage = -1;
+    int bridge = 0;
     const string explore_message[10] = {
         "Walk along the stream. There must be something beside it.", // Nothing, 10 exp
         "You met a house. What‘s in it?",                            // Unlock Craft House, 15 exp
@@ -588,6 +587,8 @@ public:
             file << "plains_2;" << plains_2.save();
 
             //
+
+            file.close();
             return sget(par.curarg + "exit;");
         }
         elif (par.curtsk == "load")
@@ -826,7 +827,7 @@ public:
         cout << magenta << "    Level" << endc;
         cout << "Currently your level is lv.";
         lvc[level - 1]();
-        cout << level << '.' << endc;
+        cout << level << magenta << '.' << endc;
         lvc[level - 1]();
         cout << right << setw(15) << exp << reset << " / ";
         lvc[level - 1]();

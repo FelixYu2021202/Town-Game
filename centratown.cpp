@@ -8,15 +8,18 @@ extern GameBoard gb;
 
 SGET_RET Town_1::operator()(string arg)
 {
-    for (int i = 1; i <= 3; i++)
+    if (sget(arg).curtsk != "town_1")
     {
+        for (int i = 1; i <= 3; i++)
+        {
+            System_Clear();
+            cout << "Travelling to " << green << "Town" << reset << string(".") * i << endc;
+            Sleep(200);
+        }
         System_Clear();
-        cout << "Travelling to " << green << "town" << reset << string(".") * i << endc;
-        Sleep(200);
+        cout << "You arrived at " << green << "Town" << reset << "." << endc;
+        Sleep(1000);
     }
-    System_Clear();
-    cout << "You arrived at " << green << "town" << reset << "." << endc;
-    Sleep(1000);
     System_Clear();
     cout << green << "       Town" << endc;
     if (MADE_MAP >= 3 && gb.level >= 1)
@@ -35,6 +38,7 @@ SGET_RET Town_1::operator()(string arg)
     cout << yellow << "   > The town carpenter (C)" << endc;
     cout << "   > The town mason (M)" << endc;
     cout << green << "   > The town merchant (P)" << endc;
+    cout << magenta << "   > Inventory (I)" << endc;
     cout << endc;
     if (MADE_MAP >= 2 && gb.level >= 1)
     {
@@ -59,6 +63,10 @@ SGET_RET Town_1::operator()(string arg)
         if (input == "L")
         {
             return sget("main_page;town_1;exit;");
+        }
+        if (input == "I")
+        {
+            return sget("invent_page;town_1;town_1;exit;");
         }
         if (input == "C")
         {
@@ -372,6 +380,7 @@ SGET_RET Town_1::operator()(string arg)
         cout << yellow << "   > The town carpenter (C)" << endc;
         cout << "   > The town mason (M)" << endc;
         cout << green << "   > The town merchant (P)" << endc;
+        cout << magenta << "   > Inventory (I)" << endc;
         cout << endc;
         if (MADE_MAP >= 2 && gb.level >= 1)
         {
@@ -418,15 +427,18 @@ SGET_RET Town_1::load(SGET_RET tgm)
 
 SGET_RET Plains_2::operator()(string arg)
 {
-    for (int i = 1; i <= 3; i++)
+    if (sget(arg).curtsk != "plains_2")
     {
+        for (int i = 1; i <= 3; i++)
+        {
+            System_Clear();
+            cout << "Travelling to " << green << "Plains" << reset << string(".") * i << endc;
+            Sleep(200);
+        }
         System_Clear();
-        cout << "Travelling to " << green << "plains" << reset << string(".") * i << endc;
-        Sleep(200);
+        cout << "You arrived at " << green << "Plains" << reset << "." << endc;
+        Sleep(1000);
     }
-    System_Clear();
-    cout << "You arrived at " << green << "plains" << reset << "." << endc;
-    Sleep(1000);
     System_Clear();
     cout << green << "       Plains" << endc;
     if (MADE_MAP >= 1 && gb.level >= 1)
@@ -451,6 +463,11 @@ SGET_RET Plains_2::operator()(string arg)
     {
         cout << "   > Mine (M)" << endc;
     }
+    if (explore_stage >= 2 && !bridge)
+    {
+        cout << yellow << "   > Bridge (B)" << endc;
+    }
+    cout << magenta << "   > Inventory (I)" << endc;
     cout << endc;
     if (MADE_MAP >= 5 && gb.level >= 2 && explore_stage >= 8)
     {
@@ -466,11 +483,23 @@ SGET_RET Plains_2::operator()(string arg)
         }
         if (MADE_MAP >= 4 && gb.level >= 2 && input == "L" && explore_stage >= 9)
         {
-            return sget("ponds_4;plains_2;exit;");
+            if (bridge || gb.consume("You need a boat.", "boat", 2, 20, 19, 1, 1).first != -1)
+            {
+                return sget("ponds_4;plains_2;exit;");
+            }
+            else
+            {
+                cout << "You cannot get to there." << endc;
+                Sleep(800);
+            }
         }
         if (MADE_MAP >= 5 && gb.level >= 2 && input == "D" && explore_stage >= 8)
         {
             return sget("woods_5;plains_2;exit;");
+        }
+        if (input == "I")
+        {
+            return sget("invent_page;plains_2;plains_2;exit;");
         }
         if (input == "F")
         {
@@ -772,6 +801,38 @@ SGET_RET Plains_2::operator()(string arg)
                 mining_lv_1 = now;
             }
         }
+        if (input == "B" && explore_stage >= 2 && !bridge)
+        {
+            System_Clear();
+            cout << "   Bridge" << endc;
+            cout << "Would you like to build a bridge?" << endc;
+            cout << "You need a bridge or a boat to get to Ponds." << endc;
+            cout << "(5 * lv.1 rope + 5 * lv.1 stick + 15 * lv.1 plank with 500 exp)" << endc;
+            pii rope_ret = gb.purchase("Building a bridge", "rope", 1, 5);
+            if (rope_ret.first != -1)
+            {
+                pii stick_ret = gb.purchase("Building a bridge", "stick", 1, 5);
+                if (stick_ret.first != -1)
+                {
+                    pii plank_ret = gb.purchase("Building a bridge", "plank", 1, 15);
+                    if (plank_ret.first != -1)
+                    {
+                        bridge = 1;
+                        gb.get_exp(500);
+                        cout << "You built a bridge and recieved 500 exp." << endc;
+                    }
+                    else
+                    {
+                        gb.invent_add("stick", stick_ret.first, stick_ret.second);
+                        gb.invent_add("rope", rope_ret.first, rope_ret.second);
+                    }
+                }
+                else
+                {
+                    gb.invent_add("rope", rope_ret.first, rope_ret.second);
+                }
+            }
+        }
         System_Clear();
         cout << green << "       Plains" << endc;
         if (MADE_MAP >= 1 && gb.level >= 1)
@@ -796,6 +857,11 @@ SGET_RET Plains_2::operator()(string arg)
         {
             cout << "   > Mine (M)" << endc;
         }
+        if (explore_stage >= 2 && !bridge)
+        {
+            cout << yellow << "   > Bridge (B)" << endc;
+        }
+        cout << magenta << "   > Inventory (I)" << endc;
         cout << endc;
         if (MADE_MAP >= 5 && gb.level >= 2 && explore_stage >= 8)
         {

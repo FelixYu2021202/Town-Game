@@ -3,7 +3,13 @@
 
 // These are settings
 #define USE_COLOR 1
+
+#if (defined(__WINDOWS_) || defined(_WIN32))
+#define SET_GNU_COLOR_IF_AVAILABLE 0
+#else //(defined(__WINDOWS_) || defined(_WIN32))
 #define SET_GNU_COLOR_IF_AVAILABLE 1
+#endif //(defined(__WINDOWS_) || defined(_WIN32))
+
 #define REVERSE_COLOR 1
 #define USE_NAMESPACE 1
 
@@ -12,6 +18,7 @@
 #if (defined(__WINDOWS_) || defined(_WIN32))
 #include <windows.h>
 #endif // (defined(__WINDOWS_) || defined(_WIN32))
+
 using namespace std;
 
 class ColorWrapper
@@ -20,13 +27,11 @@ private:
     bool gnu()
     {
 #if (defined(__WINDOWS_) || defined(_WIN32))
-        using NTPROC = void(__stdcall *)(DWORD *, DWORD *, DWORD *);
-        DWORD ver, mv, bv;
-        ((NTPROC)GetProcAddress(LoadLibrary(_T("ntdll.dll")), "RtlGetNtVersionNumbers"))(&ver, &mv, &bv);
-        if (ver < 10)
-        {
-            return false;
-        }
+#if SET_GNU_COLOR_IF_AVAILABLE
+        "To Do";
+#else  // SET_GNU_COLOR_IF_AVAILABLE
+        return false;
+#endif // SET_GNU_COLOR_IF_AVAILABLE
 #endif // (defined(__WINDOWS_) || defined(_WIN32))
         return true;
     }
@@ -71,7 +76,7 @@ private:
     template <int fore, int back, int light, typename _CT, typename _T>
     inline decltype(endl<_CT, _T>) &define_wrapper()
     {
-        if (SET_GNU_COLOR_IF_AVAILABLE && gnu())
+        if (gnu())
         {
             return GnuWrapper<light, fore, back>::template sentry<_CT, _T>;
         }

@@ -8,7 +8,11 @@ This is the Color Implementations code:
 #ifndef TG_COLOR_LIB
 #define TG_COLOR_LIB
 #define USE_COLOR 1
+#if(defined(__WINDOWS_)||defined(_WIN32))
+#define SET_GNU_COLOR_IF_AVAILABLE 0
+#else
 #define SET_GNU_COLOR_IF_AVAILABLE 1
+#endif
 #define REVERSE_COLOR 1
 #define USE_NAMESPACE 1
 #include<iostream>
@@ -18,7 +22,11 @@ This is the Color Implementations code:
 #endif
 using namespace std;class ColorWrapper{private:bool gnu(){
 #if(defined(__WINDOWS_)||defined(_WIN32))
-using NTPROC=void(__stdcall*)(DWORD*,DWORD*,DWORD*);DWORD ver,mv,bv;((NTPROC)GetProcAddress(LoadLibrary(_T("ntdll.dll")),"RtlGetNtVersionNumbers"))(&ver,&mv,&bv);if(ver<10){return false;}
+#if SET_GNU_COLOR_IF_AVAILABLE
+"To Do";
+#else
+return false;
+#endif
 #endif
 return true;}private:template<int light,int fore,int back>class GnuWrapper{public:template<typename _CT,typename _T>static basic_ostream<_CT,_T>&sentry(basic_ostream<_CT,_T>&os){os<<string("\e[")+(light?"1;":"")+to_string(fore)+(back!=47?";"+to_string(back):"")+"m";return os;}};template<int light,int fore,int back>class WdsWrapper{public:template<typename _CT,typename _T>static basic_ostream<_CT,_T>&sentry(basic_ostream<_CT,_T>&os){
 #if(defined(__WINDOWS_)||defined(_WIN32))
@@ -26,7 +34,7 @@ SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),(fore-30)|(light<<3)|((b
 #elif!SET_GNU_COLOR_IF_AVAILABLE
 assert(("Unable to use gnu color renderer or windows color renderer!",false));
 #endif
-return os;}};template<int light,int fore,int back>class NullWrapper{public:template<typename _CT,typename _T>static basic_ostream<_CT,_T>&sentry(basic_ostream<_CT,_T>&os){return os;}};template<int fore,int back,int light,typename _CT,typename _T>inline decltype(endl<_CT,_T>)&define_wrapper(){if(SET_GNU_COLOR_IF_AVAILABLE&&gnu()){return GnuWrapper<light,fore,back>::template sentry<_CT,_T>;}else{return WdsWrapper<light,fore,back>::template sentry<_CT,_T>;}}public:template<int fore,int back,int light,typename _CT,typename _T>inline decltype(endl<_CT,_T>)&wrapper(){return define_wrapper<fore,back,light,_CT,_T>();}template<typename _CT,typename _T>inline decltype(endl<_CT,_T>)&null_wrapper(){return NullWrapper<0,0,0>::template sentry<_CT,_T>;}};static ColorWrapper color_wrapper;
+return os;}};template<int light,int fore,int back>class NullWrapper{public:template<typename _CT,typename _T>static basic_ostream<_CT,_T>&sentry(basic_ostream<_CT,_T>&os){return os;}};template<int fore,int back,int light,typename _CT,typename _T>inline decltype(endl<_CT,_T>)&define_wrapper(){if(gnu()){return GnuWrapper<light,fore,back>::template sentry<_CT,_T>;}else{return WdsWrapper<light,fore,back>::template sentry<_CT,_T>;}}public:template<int fore,int back,int light,typename _CT,typename _T>inline decltype(endl<_CT,_T>)&wrapper(){return define_wrapper<fore,back,light,_CT,_T>();}template<typename _CT,typename _T>inline decltype(endl<_CT,_T>)&null_wrapper(){return NullWrapper<0,0,0>::template sentry<_CT,_T>;}};static ColorWrapper color_wrapper;
 #define DEFINE_COLOR(name,fore,back,light)template<typename _CT,typename _T>inline basic_ostream<_CT,_T>&name(basic_ostream<_CT,_T>&os){return color_wrapper.wrapper<fore,back,light,_CT,_T>()(os);}inline void set_##name(){cout<<name;}
 #if USE_NAMESPACE
 namespace color{
